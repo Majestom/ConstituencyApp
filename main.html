@@ -10,16 +10,47 @@
 </head>
 <body>
 <div class="svg-container">
-	<svg id="mapbox" height="1120" version="1.1" width="915" viewBox="0 0 915 1120" xmlns="http://www.w3.org/2000/svg">
-		<path d="M443.643593539449,956m13.86,-8l-13.86,-8,-13.86,8,0,16.00,13.86,8,13.86,-8z " selected="false" active="true" class="tory seat" data-q="-3" data-r="-11" font-size="6.4" stroke-width="1.5" stroke-opacity="1" stroke="#ffffff" id="Aldershot" name="Aldershot" data-regions="E14000530" style="cursor: pointer;"></path>
+	<svg id="mapbox" xmlns="http://www.w3.org/2000/svg">
+		<!-- <path d="M443.643593539449,956m13.86,-8l-13.86,-8,-13.86,8,0,16.00,13.86,8,13.86,-8z " selected="false" active="true" class="tory seat" data-q="-3" data-r="-11" font-size="6.4" stroke-width="1.5" stroke-opacity="1" stroke="#ffffff" id="Aldershot" name="Aldershot" data-regions="E14000530" style="cursor: pointer;"></path> -->
+		<circle cx="50" cy="50" r="5" />
+		<circle cx="101" cy="50" r="5" fill="red"/>
 	</svg>
 </div>
 
 <script>
-	let svg = document.body.querySelector("#mapbox");
-	svg.addEventListener("mouseover", function(event){
-		console.log(svg.getElementsByClassName("tory").length);
-	});
+
+	bigSize = "35";
+	smallSize = "25";
+
+	initialcx = "15"; // First x co-ordinate of circle centre. 
+	initialcy = "15"; // First y co-ordinate of circle centre. 
+
+
+	circleNumber = 650;
+
+	svg = document.querySelector("#mapbox");
+
+	for(i=0;i<circleNumber;i++){
+		let currentcx = initialcx * i;
+		let currentcy = initialcy;
+		let svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+		svgCircle.setAttribute("cx",currentcx);
+		svgCircle.setAttribute("cy",currentcy);
+		svgCircle.setAttribute("r","5");
+		svg.appendChild(svgCircle);
+	}
+
+	// Get a static array of all the circles.
+	let circles = document.querySelectorAll("#mapbox circle"); //"#mapbox > circle:nth-child(1)"
+	console.log(circles);
+
+	circles.forEach((circle) => circle.addEventListener("mouseover", function(event){
+		circle.setAttribute("r", bigSize);
+	}));
+
+	circles.forEach((circle) => circle.addEventListener("mouseout", function(event){
+		circle.setAttribute("r", smallSize);
+	}));
 
 </script>
 
