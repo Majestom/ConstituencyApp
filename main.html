@@ -20,61 +20,40 @@
 <script>
 
 
-	bigSize = "10";
-	smallSize = "5";
+	let bigSize = 10;
+	let smallSize = 5;
 
-	let initialcx = "25"; // First x co-ordinate of circle centre. 
-	let initialcy = "25"; // First y co-ordinate of circle centre. 
+	let initialcx = 25; // First x co-ordinate of circle centre. 
+	let initialcy = 25; // First y co-ordinate of circle centre. 
 
-	rowLength = "20";
-	currentRow = 0;
-	circleNumber = 650;
+	let rowLength = 20;
+	let currentRow = 0;
+	let circleNumber = 650;
+
+	let xincrement = 25;
+	let yincrement = 25;
 
 	svg = document.querySelector("#mapbox");
 
 	let currentcx = initialcx;
 	let currentcy = initialcy;
 	let i;
-	for(i = 0; i < circleNumber;i++){
-		console.log("i is " + i);
-		console.log("currentRow is " + currentRow);
-		console.log("currentcx is " + currentcx);
+	for(i = 0; i < circleNumber; i++){
+
+		currentcx = currentcx + xincrement;
+		
 		if(i % rowLength == 0){
 			currentRow = currentRow + 1;
+			currentcy = (yincrement * currentRow);
 			currentcx = initialcx;
 		}
-		currentcx = currentcx + i * initialcx;
-		// if(i % rowLength == 0){
-		// 	console.log("Current row is " + currentRow);
-		// 	currentRow = currentRow + 1;
-		// 	console.log(i % currentRow);
-		// 	currentcx = initialcx;
-		// }
-		// let currentcx = initialcx * i;
-		// console.log("currentcx is " + currentcx);
-		// let currentcy = initialcy * currentRow;
-		// console.log("currentcy is " + currentcy);
 		
+		let svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+		svgCircle.setAttribute("cx",currentcx);
+		svgCircle.setAttribute("cy",currentcy);
+		svgCircle.setAttribute("r",smallSize);
+		svg.appendChild(svgCircle);
 	}
-
-	// for(i=0;i<circleNumber;i++){
-	// 	console.log("i is " + i);
-	// 	if(i % rowLength == 0){
-	// 		console.log("Current row is " + currentRow);
-	// 		currentRow = currentRow + 1;
-	// 		console.log(i % currentRow);
-	// 		currentcx = initialcx;
-	// 	}
-
-	// 	let currentcy = initialcy * currentRow;
-	// 	let currentcx = initialcx * i;
-	// 	// console.log(currentcy);
-	// 	let svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-	// 	svgCircle.setAttribute("cx",currentcx);
-	// 	svgCircle.setAttribute("cy",currentcy);
-	// 	svgCircle.setAttribute("r",smallSize);
-	// 	svg.appendChild(svgCircle);
-	// }
 
 	// Get a static array of all the circles.
 	let circles = document.querySelectorAll("#mapbox circle"); //"#mapbox > circle:nth-child(1)"
