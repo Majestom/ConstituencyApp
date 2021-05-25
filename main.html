@@ -26,12 +26,12 @@
 	let initialcx = 25; // First x co-ordinate of circle centre. 
 	let initialcy = 25; // First y co-ordinate of circle centre. 
 
-	let rowLength = 20;
-	let currentRow = 0;
-	let circleNumber = 650;
+	let rowLength = 20; // Length of dot array row.
+	let currentRow = 0; 
+	let circleNumber = 650; // Number of dots.
 
-	let xincrement = 25;
-	let yincrement = 25;
+	let xincrement = 25; // Amount by which the x position increases each dot.
+	let yincrement = 25; // Amount by which the y position increases with each row.
 
 	svg = document.querySelector("#mapbox");
 
@@ -52,15 +52,33 @@
 		svgCircle.setAttribute("cx",currentcx);
 		svgCircle.setAttribute("cy",currentcy);
 		svgCircle.setAttribute("r",smallSize);
+		svgCircle.setAttribute("id",i);
+		svgCircle.setAttribute("class","invisible");
 		svg.appendChild(svgCircle);
 	}
 
 	// Get a static array of all the circles.
 	let circles = document.querySelectorAll("#mapbox circle"); //"#mapbox > circle:nth-child(1)"
-	console.log(circles);
+	// console.log(circles);
+
+	//From: https://travishorn.com/delaying-foreach-iterations-2ebd4b29ad30
+	const delayLoop = (fn, delay) => {
+		return (x, i) => {
+			setTimeout(() => {
+				fn(x);
+			}, i * delay);
+		}
+	};
+
+	// Make circles appear one by one on load.
+	document.addEventListener("mousedown", function(event){
+		circles.forEach(  delayLoop(function(circle) {circle.setAttribute("class","visible")}, 1.2 )  );
+	});
 
 	circles.forEach((circle) => circle.addEventListener("mouseover", function(event){
 		circle.setAttribute("r", bigSize);
+		console.log("Touched!");
+		circle.setAttribute("class","orange");
 	}));
 
 	circles.forEach((circle) => circle.addEventListener("mouseout", function(event){

@@ -8,3 +8,21 @@
   overflow: hidden;
   border-style: solid;
 }
+
+/* .svg-container #mapbox circle {
+  fill: blue;
+} */
+
+.invisible {
+  display: none;
+}
+
+.visible {
+  display: block;
+  fill: red;
+}
+
+.orange {
+  display: block;
+  fill: orange;
+}
