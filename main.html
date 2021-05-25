@@ -19,25 +19,6 @@
 
 <script>
 
-	httpRequest = new XMLHttpRequest();
-
-	httpRequest.onreadystatechange = populateData;
-
-	httpRequest.open("GET","test.hexjson",true);
-	httpRequest.send();
-
-	// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
-	function populateData(){
-		if (httpRequest.readyState === XMLHttpRequest.DONE) {
-      		if (httpRequest.status === 200) {
-				let consData = JSON.parse(httpRequest.responseText);
-      		} else {
-        		alert('There was a problem with the request.');
-      		}
-		}
-	}
-
-
 
 
 	let bigSize = 10;
@@ -53,35 +34,64 @@
 	let xincrement = 25; // Amount by which the x position increases each dot.
 	let yincrement = 25; // Amount by which the y position increases with each row.
 
-	svg = document.querySelector("#mapbox");
+	function loadData(source) {
 
-	let currentcx = initialcx;
-	let currentcy = initialcy;
-	let i;
-	for(i = 0; i < circleNumber; i++){
-
-		currentcx = currentcx + xincrement;
+		// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
+		httpRequest = new XMLHttpRequest();
+		httpRequest.onreadystatechange = populateData;
+		httpRequest.open("GET",source,true);
 		
-		if(i % rowLength == 0){
-			currentRow = currentRow + 1;
-			currentcy = (yincrement * currentRow);
-			currentcx = initialcx;
+		httpRequest.send();
+
+		function populateData(){
+			if (httpRequest.readyState === XMLHttpRequest.DONE) {
+				if (httpRequest.status === 200) {
+					var consData = JSON.parse(httpRequest.responseText);
+					console.log(consData);
+				} else {
+					alert("There was a problem with the request.");
+				}
+			}
 		}
-		
-		let svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-		svgCircle.setAttribute("cx",currentcx);
-		svgCircle.setAttribute("cy",currentcy);
-		svgCircle.setAttribute("r",smallSize);
-		svgCircle.setAttribute("id",i);
-		svgCircle.setAttribute("class","invisible");
-		svg.appendChild(svgCircle);
 	}
+
+	function createCircles(jsonData) {
+
+		svg = document.querySelector("#mapbox");
+
+		let currentcx = initialcx;
+		let currentcy = initialcy;
+		let i;
+		for(i = 0; i < circleNumber; i++){
+
+			currentcx = currentcx + xincrement;
+			
+			if(i % rowLength == 0){
+				currentRow = currentRow + 1;
+				currentcy = (yincrement * currentRow);
+				currentcx = initialcx;
+			}
+			
+			let svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+			svgCircle.setAttribute("cx",currentcx);
+			svgCircle.setAttribute("cy",currentcy);
+			svgCircle.setAttribute("r",smallSize);
+			svgCircle.setAttribute("id",i);
+			svgCircle.setAttribute("class","invisible");
+			svg.appendChild(svgCircle);
+		}
+
+		console.log(jsonData);
+	}
+
+	createCircles();
+
+	loadData("test.hexjson");
 
 	// Get a static array of all the circles.
 	let circles = document.querySelectorAll("#mapbox circle"); //"#mapbox > circle:nth-child(1)"
-	// console.log(circles);
 
-	//From: https://travishorn.com/delaying-foreach-iterations-2ebd4b29ad30
+	// From: https://travishorn.com/delaying-foreach-iterations-2ebd4b29ad30
 	const delayLoop = (fn, delay) => {
 		return (x, i) => {
 			setTimeout(() => {
@@ -90,17 +100,21 @@
 		}
 	};
 
+	// Event listeners.
+
 	// Make circles appear one by one on load.
 	document.addEventListener("mousedown", function(event){
 		circles.forEach(  delayLoop(function(circle) {circle.setAttribute("class","visible")}, 1.2 )  );
 	});
 
+	// Change colour and size of circles when touched.
 	circles.forEach((circle) => circle.addEventListener("mouseover", function(event){
 		circle.setAttribute("r", bigSize);
 		console.log("Touched!");
 		circle.setAttribute("class","orange");
 	}));
 
+	// Change size back to normal after touching circles.
 	circles.forEach((circle) => circle.addEventListener("mouseout", function(event){
 		circle.setAttribute("r", smallSize);
 	}));
