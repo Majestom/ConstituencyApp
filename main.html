@@ -19,6 +19,26 @@
 
 <script>
 
+	httpRequest = new XMLHttpRequest();
+
+	httpRequest.onreadystatechange = populateData;
+
+	httpRequest.open("GET","test.hexjson",true);
+	httpRequest.send();
+
+	// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
+	function populateData(){
+		if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      		if (httpRequest.status === 200) {
+				let consData = JSON.parse(httpRequest.responseText);
+      		} else {
+        		alert('There was a problem with the request.');
+      		}
+		}
+	}
+
+
+
 
 	let bigSize = 10;
 	let smallSize = 5;
