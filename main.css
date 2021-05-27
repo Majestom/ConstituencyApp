@@ -7,6 +7,11 @@
   vertical-align: middle;
   overflow: hidden;
   border-style: solid;
+  background-color: rgb(
+    68,
+    122,
+    28
+  ); /* https://www.parliament.uk/globalassets/documents/commons-commission/Commons-Management-Board/MB2008/11-DEC08/MB2008.P.101A---Visual-Identity-guidelines-2009.pdf*/
 }
 
 /* .svg-container #mapbox circle {
@@ -22,7 +27,17 @@
   fill: red;
 }
 
+.red {
+  display: block;
+  fill: red;
+}
+
 .orange {
   display: block;
   fill: orange;
+}
+
+.blue {
+  display: block;
+  fill: blue;
 }

@@ -15,6 +15,16 @@
 		<!-- <circle cx="50" cy="50" r="5" />
 		<circle cx="101" cy="50" r="5" fill="red"/> -->
 	</svg>
+	<form action="/action_page.php">
+		<label for="red">Red:</label>
+		<input type="text" id="red" name="red"><br><br>
+		<label for="orange">Orange:</label>
+		<input type="text" id="orange" name="orange"><br><br>
+		<label for="orange">Blue:</label>
+		<input type="text" id="blue" name="blue"><br><br>
+		<input type="submit" value="Submit">
+	</form>
+	  
 </div>
 
 <script>
@@ -39,7 +49,7 @@
 		// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
 		httpRequest = new XMLHttpRequest();
 		httpRequest.onreadystatechange = populateData;
-		httpRequest.open("GET",source,true);
+		httpRequest.open("GET", source, false); // false here means this is loaded synchronously.
 		
 		httpRequest.send();
 
@@ -47,7 +57,6 @@
 			if (httpRequest.readyState === XMLHttpRequest.DONE) {
 				if (httpRequest.status === 200) {
 					var consData = JSON.parse(httpRequest.responseText);
-					console.log(consData);
 				} else {
 					alert("There was a problem with the request.");
 				}
@@ -55,7 +64,7 @@
 		}
 	}
 
-	function createCircles(jsonData) {
+	function createCircles() {
 
 		svg = document.querySelector("#mapbox");
 
@@ -80,13 +89,11 @@
 			svgCircle.setAttribute("class","invisible");
 			svg.appendChild(svgCircle);
 		}
-
-		console.log(jsonData);
 	}
 
 	createCircles();
 
-	loadData("test.hexjson");
+	const myJSON = loadData("test.hexjson");
 
 	// Get a static array of all the circles.
 	let circles = document.querySelectorAll("#mapbox circle"); //"#mapbox > circle:nth-child(1)"
@@ -100,18 +107,40 @@
 		}
 	};
 
+	// Seat counts.
+	redSeats = circleNumber;
+	orangeSeats = 0;
+	blueSeats = 0;
+
 	// Event listeners.
 
 	// Make circles appear one by one on load.
 	document.addEventListener("mousedown", function(event){
-		circles.forEach(  delayLoop(function(circle) {circle.setAttribute("class","visible")}, 1.2 )  );
+		circles.forEach(delayLoop(function(circle) {circle.setAttribute("class", "red")}, 1.2 )  );
 	});
 
 	// Change colour and size of circles when touched.
 	circles.forEach((circle) => circle.addEventListener("mouseover", function(event){
+
 		circle.setAttribute("r", bigSize);
-		console.log("Touched!");
-		circle.setAttribute("class","orange");
+
+		console.log("Red: " + redSeats);
+		console.log("Orange:" + orangeSeats);
+		console.log("Blue:" + blueSeats);
+
+		if (circle.getAttribute("class") === "red") {
+			circle.setAttribute("class", "orange");
+			redSeats = redSeats - 1;
+			orangeSeats = orangeSeats + 1;
+		} else if (circle.getAttribute("class") === "orange"){
+			circle.setAttribute("class", "blue");
+			orangeSeats = orangeSeats - 1;
+			blueSeats = blueSeats + 1;
+		} else if (circle.getAttribute("class") === "blue"){
+			circle.setAttribute("class", "red");
+			blueSeats = blueSeats - 1;
+			redSeats = redSeats + 1;
+		}
 	}));
 
 	// Change size back to normal after touching circles.
