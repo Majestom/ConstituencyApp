@@ -15,7 +15,7 @@
 		<!-- <circle cx="50" cy="50" r="5" />
 		<circle cx="101" cy="50" r="5" fill="red"/> -->
 	</svg>
-	<form action="/action_page.php">
+	<!-- <form>
 		<label for="red">Red:</label>
 		<input type="text" id="red" name="red"><br><br>
 		<label for="orange">Orange:</label>
@@ -23,13 +23,13 @@
 		<label for="orange">Blue:</label>
 		<input type="text" id="blue" name="blue"><br><br>
 		<input type="submit" value="Submit">
-	</form>
+	</form> -->
 	  
 </div>
 
 <script>
 
-
+	
 
 	let bigSize = 10;
 	let smallSize = 5;
@@ -49,7 +49,7 @@
 		// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
 		httpRequest = new XMLHttpRequest();
 		httpRequest.onreadystatechange = populateData;
-		httpRequest.open("GET", source, false); // false here means this is loaded synchronously.
+		httpRequest.open("GET", source, true); // false here means this is loaded synchronously.
 		
 		httpRequest.send();
 
@@ -57,6 +57,7 @@
 			if (httpRequest.readyState === XMLHttpRequest.DONE) {
 				if (httpRequest.status === 200) {
 					var consData = JSON.parse(httpRequest.responseText);
+					console.log(consData);
 				} else {
 					alert("There was a problem with the request.");
 				}
