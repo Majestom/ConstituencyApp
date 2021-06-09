@@ -27,6 +27,8 @@
 	  
 </div>
 
+<div id="current_results"></div>
+
 <script>
 
 	
@@ -125,6 +127,8 @@
 
 		circle.setAttribute("r", bigSize);
 
+		let results = document.querySelector("#current_results");
+		results.innerHTML = "Red: " + redSeats + "<br> Orange:" + orangeSeats + "<br> Blue:" + blueSeats;
 		console.log("Red: " + redSeats);
 		console.log("Orange:" + orangeSeats);
 		console.log("Blue:" + blueSeats);
