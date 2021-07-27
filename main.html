@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Constituencies</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <!-- <script src='main.js'></script> -->
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Constituencies</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+	<!-- <script src='main.js'></script> -->
 </head>
+
 <body>
-<div class="svg-container">
-	<svg id="mapbox" viewBox="10 10 1000 1000" xmlns="http://www.w3.org/2000/svg">
-		<!-- <path d="M443.643593539449,956m13.86,-8l-13.86,-8,-13.86,8,0,16.00,13.86,8,13.86,-8z " selected="false" active="true" class="tory seat" data-q="-3" data-r="-11" font-size="6.4" stroke-width="1.5" stroke-opacity="1" stroke="#ffffff" id="Aldershot" name="Aldershot" data-regions="E14000530" style="cursor: pointer;"></path> -->
-		<!-- <circle cx="50" cy="50" r="5" />
+	<div class="svg-container">
+		<svg id="mapbox" viewBox="10 10 1000 1000" xmlns="http://www.w3.org/2000/svg">
+			<!-- <path d="M443.643593539449,956m13.86,-8l-13.86,-8,-13.86,8,0,16.00,13.86,8,13.86,-8z " selected="false" active="true" class="tory seat" data-q="-3" data-r="-11" font-size="6.4" stroke-width="1.5" stroke-opacity="1" stroke="#ffffff" id="Aldershot" name="Aldershot" data-regions="E14000530" style="cursor: pointer;"></path> -->
+			<!-- <circle cx="50" cy="50" r="5" />
 		<circle cx="101" cy="50" r="5" fill="red"/> -->
-	</svg>
-	<!-- <form>
+		</svg>
+		<!-- <form>
 		<label for="red">Red:</label>
 		<input type="text" id="red" name="red"><br><br>
 		<label for="orange">Orange:</label>
@@ -24,136 +26,144 @@
 		<input type="text" id="blue" name="blue"><br><br>
 		<input type="submit" value="Submit">
 	</form> -->
-	  
-</div>
 
-<div id="current_results"></div>
+	</div>
 
-<script>
+	<div id="current_results"></div>
 
-	
+	<script>
 
-	let bigSize = 10;
-	let smallSize = 5;
 
-	let initialcx = 25; // First x co-ordinate of circle centre. 
-	let initialcy = 25; // First y co-ordinate of circle centre. 
 
-	let rowLength = 25; // Length of dot array row.
-	let currentRow = 0; 
-	let circleNumber = 650; // Number of dots.
+		let bigSize = 10;
+		let smallSize = 5;
 
-	let xincrement = 25; // Amount by which the x position increases each dot.
-	let yincrement = 25; // Amount by which the y position increases with each row.
+		let initialcx = 25; // First x co-ordinate of circle centre. 
+		let initialcy = 25; // First y co-ordinate of circle centre. 
 
-	function loadData(source) {
+		let rowLength = 25; // Length of dot array row.
+		let currentRow = 0;
+		let circleNumber = 650; // Number of dots.
 
-		// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
-		httpRequest = new XMLHttpRequest();
-		httpRequest.onreadystatechange = populateData;
-		httpRequest.open("GET", source, true); // false here means this is loaded synchronously.
-		
-		httpRequest.send();
+		let xincrement = 25; // Amount by which the x position increases each dot.
+		let yincrement = 25; // Amount by which the y position increases with each row.
 
-		function populateData(){
-			if (httpRequest.readyState === XMLHttpRequest.DONE) {
-				if (httpRequest.status === 200) {
-					var consData = JSON.parse(httpRequest.responseText);
-					console.log(consData);
-				} else {
-					alert("There was a problem with the request.");
+		function loadData(source) {
+
+			// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
+			httpRequest = new XMLHttpRequest();
+			httpRequest.onreadystatechange = populateData;
+			httpRequest.open("GET", source, true); // false here means this is loaded synchronously.
+
+			httpRequest.send();
+
+			function populateData() {
+				if (httpRequest.readyState === XMLHttpRequest.DONE) {
+					if (httpRequest.status === 200) {
+						var consData = JSON.parse(httpRequest.responseText);
+						console.log(consData);
+					} else {
+						alert("There was a problem with the request.");
+					}
 				}
 			}
 		}
-	}
 
-	function createCircles() {
+		function createCircles() {
 
-		svg = document.querySelector("#mapbox");
+			svg = document.querySelector("#mapbox");
 
-		let currentcx = initialcx;
-		let currentcy = initialcy;
-		let i;
-		for(i = 0; i < circleNumber; i++){
+			let currentcx = initialcx;
+			let currentcy = initialcy;
+			let i;
+			for (i = 0; i < circleNumber; i++) {
 
-			currentcx = currentcx + xincrement;
-			
-			if(i % rowLength == 0){
-				currentRow = currentRow + 1;
-				currentcy = (yincrement * currentRow);
-				currentcx = initialcx;
+				currentcx = currentcx + xincrement;
+
+				if (i % rowLength == 0) {
+					currentRow = currentRow + 1;
+					currentcy = (yincrement * currentRow);
+					currentcx = initialcx;
+				}
+
+				let svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+				svgCircle.setAttribute("cx", currentcx);
+				svgCircle.setAttribute("cy", currentcy);
+				svgCircle.setAttribute("r", smallSize);
+				svgCircle.setAttribute("id", i);
+				svgCircle.setAttribute("class", "invisible");
+				svg.appendChild(svgCircle);
 			}
-			
-			let svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-			svgCircle.setAttribute("cx",currentcx);
-			svgCircle.setAttribute("cy",currentcy);
-			svgCircle.setAttribute("r",smallSize);
-			svgCircle.setAttribute("id",i);
-			svgCircle.setAttribute("class","invisible");
-			svg.appendChild(svgCircle);
 		}
-	}
 
-	createCircles();
+		createCircles();
 
-	const myJSON = loadData("test.hexjson");
+		const myJSON = loadData("test.hexjson");
 
-	// Get a static array of all the circles.
-	let circles = document.querySelectorAll("#mapbox circle"); //"#mapbox > circle:nth-child(1)"
+		// Get a static array of all the circles.
+		let circles = document.querySelectorAll("#mapbox circle"); //"#mapbox > circle:nth-child(1)"
 
-	// From: https://travishorn.com/delaying-foreach-iterations-2ebd4b29ad30
-	const delayLoop = (fn, delay) => {
-		return (x, i) => {
-			setTimeout(() => {
-				fn(x);
-			}, i * delay);
-		}
-	};
+		// From: https://travishorn.com/delaying-foreach-iterations-2ebd4b29ad30
+		const delayLoop = (fn, delay) => {
+			return (x, i) => {
+				setTimeout(() => {
+					fn(x);
+				}, i * delay);
+			}
+		};
 
-	// Seat counts.
-	redSeats = circleNumber;
-	orangeSeats = 0;
-	blueSeats = 0;
+		// Seat counts.
+		redSeats = circleNumber;
+		orangeSeats = 0;
+		blueSeats = 0;
 
-	// Event listeners.
+		// Event listeners.
 
-	// Make circles appear one by one on load.
-	document.addEventListener("mousedown", function(event){
-		circles.forEach(delayLoop(function(circle) {circle.setAttribute("class", "red")}, 1.2 )  );
-	});
+		// Make circles appear one by one on load.
+		document.addEventListener("mousedown", function (event) {
+			circles.forEach(delayLoop(function (circle) { circle.setAttribute("class", "red") }, 1.2));
+		});
 
-	// Change colour and size of circles when touched.
-	circles.forEach((circle) => circle.addEventListener("mouseover", function(event){
+		// Change colour and size of circles when touched.
+		circles.forEach((circle) => circle.addEventListener("mouseover", function (event) {
 
-		circle.setAttribute("r", bigSize);
+			circle.setAttribute("r", bigSize);
 
-		let results = document.querySelector("#current_results");
-		results.innerHTML = "Red: " + redSeats + "<br> Orange:" + orangeSeats + "<br> Blue:" + blueSeats;
-		console.log("Red: " + redSeats);
-		console.log("Orange:" + orangeSeats);
-		console.log("Blue:" + blueSeats);
+			let results = document.querySelector("#current_results");
 
-		if (circle.getAttribute("class") === "red") {
-			circle.setAttribute("class", "orange");
-			redSeats = redSeats - 1;
-			orangeSeats = orangeSeats + 1;
-		} else if (circle.getAttribute("class") === "orange"){
-			circle.setAttribute("class", "blue");
-			orangeSeats = orangeSeats - 1;
-			blueSeats = blueSeats + 1;
-		} else if (circle.getAttribute("class") === "blue"){
-			circle.setAttribute("class", "red");
-			blueSeats = blueSeats - 1;
-			redSeats = redSeats + 1;
-		}
-	}));
+			updateCount();
 
-	// Change size back to normal after touching circles.
-	circles.forEach((circle) => circle.addEventListener("mouseout", function(event){
-		circle.setAttribute("r", smallSize);
-	}));
+			if (circle.getAttribute("class") === "red") {
+				circle.setAttribute("class", "orange");
+				redSeats = redSeats - 1;
+				orangeSeats = orangeSeats + 1;
+			} else if (circle.getAttribute("class") === "orange") {
+				circle.setAttribute("class", "blue");
+				orangeSeats = orangeSeats - 1;
+				blueSeats = blueSeats + 1;
+			} else if (circle.getAttribute("class") === "blue") {
+				circle.setAttribute("class", "red");
+				blueSeats = blueSeats - 1;
+				redSeats = redSeats + 1;
+			}
 
-</script>
+			updateCount();
+
+			function updateCount() {
+				results.innerHTML = "Red: " + redSeats + "<br> Orange:" + orangeSeats + "<br> Blue:" + blueSeats;
+				console.log("Red: " + redSeats);
+				console.log("Orange:" + orangeSeats);
+				console.log("Blue:" + blueSeats);
+			}
+		}));
+
+		// Change size back to normal after touching circles.
+		circles.forEach((circle) => circle.addEventListener("mouseout", function (event) {
+			circle.setAttribute("r", smallSize);
+		}));
+
+	</script>
 
 </body>
+
 </html>
