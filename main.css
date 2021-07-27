@@ -1,9 +1,10 @@
 .svg-container {
-  display: inline-block;
+  /* display: inline-block; */
+  display: flex;
   position: relative;
-  width: 100%;
-  height: 100%;
-  padding-bottom: 10%;
+  width: 70%;
+  height: 70%;
+  padding-bottom: 10%/;
   vertical-align: middle;
   overflow: hidden;
   border-style: solid;
@@ -14,9 +15,9 @@
   ); /* https://www.parliament.uk/globalassets/documents/commons-commission/Commons-Management-Board/MB2008/11-DEC08/MB2008.P.101A---Visual-Identity-guidelines-2009.pdf*/
 }
 
-/* .svg-container #mapbox circle {
-  fill: blue;
-} */
+.svg-container #mapbox {
+  display:inline-block;
+}
 
 .invisible {
   display: none;
