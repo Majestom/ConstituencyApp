@@ -50,6 +50,10 @@
 		let xincrement = 25; // Amount by which the x position increases each dot.
 		let yincrement = 25; // Amount by which the y position increases with each row.
 
+		// Current esults div.
+		let results = document.querySelector("#current_results");
+
+
 		function loadData(source) {
 
 			// Import consistuency data (source: https://odileeds.org/projects/hexmaps/constituencies/) 
@@ -146,6 +150,10 @@
 			blueSeats = parseInt(blueInput.value);
 			orangeSeats = parseInt(orangeInput.value);
 
+			let currentRedSeats = redSeats;
+			let currentBlueSeats = blueSeats;
+			let currentOrangeSeats = orangeSeats;
+
 			// Check inputs are numbers.
 			if (isNaN(redSeats) | isNaN(blueSeats) | isNaN(orangeSeats)) {
 				alert("Please enter numbers.");
@@ -157,25 +165,26 @@
 			}
 
 			for (i = 0; i < circles.length; i++) {
-				if (redSeats != 0) {
+				if (currentRedSeats != 0) {
 					circles.item(i).setAttribute("class", "red");
-					redSeats = redSeats - 1;
+					currentRedSeats = currentRedSeats - 1;
 					continue;
 				}
-				if (blueSeats != 0) {
+				if (currentBlueSeats != 0) {
 					circles.item(i).setAttribute("class", "blue");
-					blueSeats = blueSeats - 1;
+					currentBlueSeats = currentBlueSeats - 1;
 					continue;
 				}
-				if (orangeSeats != 0) {
+				if (currentOrangeSeats != 0) {
 					circles.item(i).setAttribute("class", "orange");
-					orangeSeats = orangeSeats - 1;
+					currentOrangeSeats = currentOrangeSeats - 1;
 					continue;
 				}
 			}
+
+			updateCount();
 		});
 
-		let results = document.querySelector("#current_results");
 
 		// Add event listeners to each circle so that circles change colour and size when they are touched.
 		circles.forEach((circle) => circle.addEventListener("mouseover", function (event) {
