@@ -33,21 +33,19 @@
 
 	<div id="control_buttons">
 		<button id="input" type="button">Add</button>
+		<button id="reset" type="button">Reset</button>
 	</div>
 
 	<script>
-
-
-
 		let bigSize = 10;
 		let smallSize = 5;
 
-		let initialcx = 25; // First x co-ordinate of circle centre. 
-		let initialcy = 25; // First y co-ordinate of circle centre. 
+		let initialcx = 30; // First x co-ordinate of circle centre. 
+		let initialcy = 30; // First y co-ordinate of circle centre. 
 
 		let rowLength = 25; // Length of dot array row.
 		let currentRow = 0;
-		let circleNumber = 650; // Number of dots.
+		let circleNumber = 650; // Number of circles.
 
 		let xincrement = 25; // Amount by which the x position increases each dot.
 		let yincrement = 25; // Amount by which the y position increases with each row.
@@ -117,15 +115,19 @@
 		};
 
 		// Seat counts.
-		redSeats = circleNumber;
+		redSeats = 0;
 		orangeSeats = 0;
 		blueSeats = 0;
 
 		// Event listeners.
 
 		// Make circles appear one by one on click.
-		document.addEventListener("mousedown", function (event) {
-			circles.forEach(delayLoop(function (circle) { circle.setAttribute("class", "red") }, 1.2));
+		document.querySelector("#reset").addEventListener("mousedown", function (event) {
+			circles.forEach(delayLoop(function (circle) { circle.setAttribute("class", "neutral") }, 1.2));
+			redSeats = 0;
+			orangeSeats = 0;
+			blueSeats = 0;
+			updateCount();
 		});
 
 		// Change colours of circles when user enters value in appropriate input box.
@@ -140,45 +142,52 @@
 
 		// Add event listener to the input button so that when clicked, it populates circles.
 		inputButton.addEventListener("click", function (event) {
-			redSeats = redInput.value;
-			blueSeats = blueInput.value;
-			orangeSeats = orangeInput.value;
+			redSeats = parseInt(redInput.value);
+			blueSeats = parseInt(blueInput.value);
+			orangeSeats = parseInt(orangeInput.value);
 
 			// Check inputs are numbers.
 			if (isNaN(redSeats) | isNaN(blueSeats) | isNaN(orangeSeats)) {
 				alert("Please enter numbers.");
 			}
 
-			// TODO: Check numbers add up to circleNumber.
-
-			// Initialise currentCircle to first in circles.
-			let currentCircle = circles.item(0);
+			// Check numbers add up to circleNumber.
+			if ((redSeats + blueSeats + orangeSeats) > circleNumber) {
+				alert("Seat numbers must sum to " + circleNumber + ", not " + (redSeats + blueSeats + orangeSeats));
+			}
 
 			for (i = 0; i < circles.length; i++) {
 				if (redSeats != 0) {
-					currentCircle.setAttribute("class", "red");
+					circles.item(i).setAttribute("class", "red");
 					redSeats = redSeats - 1;
-				} else if (blueSeats != 0) {
-					currentCircle.setAttribute("class", "blue");
-					blueSeats = blueSeats - 1;
-				} else if (orangeSeats) {
-					currentCircle.setAttribute("class", "orange");
-					orangeSeats = orangeSeats - 1;
+					continue;
 				}
-				currentCircle = circles.item(i);
+				if (blueSeats != 0) {
+					circles.item(i).setAttribute("class", "blue");
+					blueSeats = blueSeats - 1;
+					continue;
+				}
+				if (orangeSeats != 0) {
+					circles.item(i).setAttribute("class", "orange");
+					orangeSeats = orangeSeats - 1;
+					continue;
+				}
 			}
 		});
 
-		// Change colour and size of circles when they are touched.
+		let results = document.querySelector("#current_results");
+
+		// Add event listeners to each circle so that circles change colour and size when they are touched.
 		circles.forEach((circle) => circle.addEventListener("mouseover", function (event) {
 
 			circle.setAttribute("r", bigSize);
 
-			let results = document.querySelector("#current_results");
-
 			updateCount();
 
-			if (circle.getAttribute("class") === "red") {
+			if (circle.getAttribute("class") === "neutral") {
+				circle.setAttribute("class", "red");
+				redSeats = redSeats + 1;
+			} else if (circle.getAttribute("class") === "red") {
 				circle.setAttribute("class", "orange");
 				redSeats = redSeats - 1;
 				orangeSeats = orangeSeats + 1;
@@ -187,20 +196,19 @@
 				orangeSeats = orangeSeats - 1;
 				blueSeats = blueSeats + 1;
 			} else if (circle.getAttribute("class") === "blue") {
-				circle.setAttribute("class", "red");
+				circle.setAttribute("class", "neutral");
 				blueSeats = blueSeats - 1;
-				redSeats = redSeats + 1;
 			}
 
 			updateCount();
 
-			// Updates count of seat colours.
-			function updateCount() {
-				results.innerHTML = "Red: " + redSeats + "<br> Orange:" + orangeSeats + "<br> Blue:" + blueSeats;
-			}
+
 		}));
 
-
+		// Updates count of seat colours.
+		function updateCount() {
+			results.innerHTML = "Red: " + redSeats + "<br> Orange:" + orangeSeats + "<br> Blue:" + blueSeats;
+		}
 
 		// Change size back to normal after touching circles.
 		circles.forEach((circle) => circle.addEventListener("mouseout", function (event) {

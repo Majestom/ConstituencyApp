@@ -30,6 +30,11 @@
   fill: red;
 }
 
+.neutral {
+  display: block;
+  fill: gray;
+}
+
 .red {
   display: block;
   fill: red;
