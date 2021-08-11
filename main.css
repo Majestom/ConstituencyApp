@@ -16,9 +16,9 @@
 }
 
 .svg-container #mapbox {
-  display:inline-block;
-  width:80%;
-  height:80%;
+  display: inline-block;
+  width: 80%;
+  height: 80%;
 }
 
 .invisible {
@@ -48,4 +48,14 @@
 .blue {
   display: block;
   fill: blue;
+}
+
+/* https://stackoverflow.com/questions/41768657/display-text-over-svg-element-on-hover */
+
+svg text {
+  display: none;
+}
+
+svg g:hover text {
+  display: block;
 }
