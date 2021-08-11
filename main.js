@@ -44,6 +44,11 @@ function loadData(source) {
 
 				createCircles(consData);
 
+				let i = 0;
+				for(thing in consData){
+					console.log(thing);
+				}
+
 				// Get a static array of all the circles.
 				let circles = document.querySelectorAll("#mapbox circle");
 
@@ -194,7 +199,7 @@ function loadData(source) {
 						svgCircle.setAttribute("r", smallSize);
 						svgCircle.setAttribute("id", i);
 						svgCircle.setAttribute("class", "neutral");
-						// svgCircle.setAttribute("text", someJSON.hexes); //https://stackoverflow.com/questions/9151619/how-to-iterate-over-a-jsonobject
+						svgCircle.setAttribute("text", someJSON[i]); //https://stackoverflow.com/questions/9151619/how-to-iterate-over-a-jsonobject
 						svg.appendChild(svgCircle);
 					}
 
